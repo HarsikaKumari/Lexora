@@ -252,10 +252,10 @@ function SignUpPage() {
               fontFamily: 'Georgia,serif',
             }}
           >
-            Welcome back
+            Welcome to Lexora!
           </h2>
           <p style={{ fontSize: 13, color: C.gray600, marginBottom: 28 }}>
-            Sign in to your Lexora account to continue.
+            Sign Up to your Lexora account to continue.
           </p>
 
           {/* Role selector */}
@@ -346,28 +346,11 @@ function SignUpPage() {
               <InputField
                 label='Password'
                 type='password'
-                placeholder='••••••••'
+                placeholder='Enter a strong password'
                 value={form.password}
                 onChange={handleChange('password')}
                 error={errors.password}
               />
-
-              {/* Forgot password */}
-              <div
-                style={{ textAlign: 'right', marginTop: -8, marginBottom: 20 }}
-              >
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: C.blue600,
-                    cursor: 'pointer',
-                    textDecoration: 'underline',
-                    textUnderlineOffset: 2,
-                  }}
-                >
-                  Forgot password?
-                </span>
-              </div>
 
               {/* Submit button */}
               <button
@@ -376,6 +359,8 @@ function SignUpPage() {
                 style={{
                   width: '100%',
                   padding: '11px 0',
+                  marginLeft: '14px',
+                  marginTop: 10,
                   fontSize: 14,
                   fontWeight: 500,
                   background: loading ? C.blue200 : C.blue600,
@@ -411,7 +396,7 @@ function SignUpPage() {
                 />
               </div>
 
-              {/* Google sign-in */}
+              {/* Google sign-up */}
               <button
                 type='button'
                 style={{
@@ -455,12 +440,12 @@ function SignUpPage() {
                     d='M24 47c5.4 0 10-1.8 13.3-4.8l-6.8-5.3c-1.9 1.3-4.3 2-6.5 2-6.3 0-11.6-4.2-13.5-10l-7 5.4C6.7 41.6 14.7 47 24 47z'
                   />
                 </svg>
-                Sign in with Google
+                Sign Up with Google
               </button>
             </form>
           )}
 
-          {/* Sign up link */}
+          {/* login link */}
           <p
             style={{
               textAlign: 'center',
@@ -469,9 +454,9 @@ function SignUpPage() {
               marginTop: 24,
             }}
           >
-            Don't have an account?{' '}
+            Already have an account?{' '}
             <Link
-              to='/signup'
+              to='/'
               style={{
                 color: C.blue600,
                 fontWeight: 500,
@@ -479,7 +464,7 @@ function SignUpPage() {
                 textUnderlineOffset: 2,
               }}
             >
-              Create one free
+              Sign in
             </Link>
           </p>
         </div>

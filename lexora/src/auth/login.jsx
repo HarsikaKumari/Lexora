@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // ── Colour tokens ──────────────────────────────────────────────────────────────
 const C = {
@@ -320,7 +321,7 @@ function LoginPage() {
               <InputField
                 label='Password'
                 type='password'
-                placeholder='••••••••'
+                placeholder='Enter a strong password'
                 value={form.password}
                 onChange={handleChange('password')}
                 error={errors.password}
@@ -444,7 +445,8 @@ function LoginPage() {
             }}
           >
             Don't have an account?{' '}
-            <span
+            <Link
+              to='/signup'
               style={{
                 color: C.blue600,
                 fontWeight: 500,
@@ -454,7 +456,7 @@ function LoginPage() {
               }}
             >
               Create one free
-            </span>
+            </Link>
           </p>
         </div>
       </div>

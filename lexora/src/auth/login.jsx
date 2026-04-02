@@ -98,7 +98,7 @@ const TrustBadge = ({ text }) => (
 );
 
 // ── Main Login Page ────────────────────────────────────────────────────────────
-export default function LoginPage() {
+function LoginPage() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [role, setRole] = useState('client');
@@ -461,3 +461,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default LoginPage;

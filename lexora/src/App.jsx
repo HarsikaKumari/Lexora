@@ -1,11 +1,25 @@
 import React from 'react';
-import Login from './auth/login';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from './auth/login';
+import SignUpPage from './auth/signUp';
+import Dashboard from './components/client-dashboard';
 
 function App() {
   return (
-    <div>
-      <Login />
-    </div>
+    <Routes>
+      <Route
+        path='/'
+        element={<LoginPage />}
+      />
+      <Route
+        path='/signup'
+        element={<SignUpPage />}
+      />
+      <Route
+        path='/dashboard'
+        element={<Dashboard />}
+      />
+    </Routes>
   );
 }
 

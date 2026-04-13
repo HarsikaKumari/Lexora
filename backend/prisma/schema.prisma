@@ -1,0 +1,155 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  client
+  lawyer
+  admin
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+}
+
+enum LegalIssue {
+  family_law
+  criminal_law
+  corporate_law
+  property_law
+  labor_law
+  tax_law
+  intellectual_property
+  immigration_law
+  human_rights
+  contract_law
+  tort_law
+  constitutional_law
+  other
+}
+
+enum DocumentType {
+  affidavit
+  contract
+  divorce_petition
+  will_and_testament
+  power_of_attorney
+  lease_agreement
+  employment_contract
+  partnership_agreement
+  non_disclosure_agreement
+  legal_notice
+  other
+}
+
+enum DocumentStatus {
+  generated
+  updated
+  downloaded
+  archived
+}
+
+// User Model
+model User {
+  id                Int      @id @default(autoincrement())
+  name              String
+  email             String   @unique
+  password_hash     String
+  role              Role     @default(client)
+  unique_identifier String?
+  region            String?
+  is_verified       Boolean  @default(false)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  
+  // Relations
+  services          Service[]
+  bookings          Booking[]
+  documents         Document[]
+
+  @@map("users")
+}
+
+// Service Model
+model Service {
+  id               Int      @id @default(autoincrement())
+  lawyer_id        Int
+  title            String
+  description      String   @db.Text
+  legal_issue      LegalIssue?
+  document_type    DocumentType?
+  region           String?
+  price            Float
+  duration_minutes Int      @default(60)
+  is_active        Boolean  @default(true)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  
+  // Relations
+  lawyer           User     @relation(fields: [lawyer_id], references: [id], onDelete: Cascade)
+  bookings         Booking[]
+
+  @@index([lawyer_id])
+  @@index([is_active])
+  @@index([legal_issue])
+  @@index([document_type])
+  @@index([region])
+  @@map("services")
+}
+
+// Booking Model
+model Booking {
+  id           Int           @id @default(autoincrement())
+  client_id    Int
+  service_id   Int
+  status       BookingStatus @default(pending)
+  booking_date DateTime
+  notes        String?
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  
+  // Relations
+  client       User          @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  service      Service       @relation(fields: [service_id], references: [id], onDelete: Cascade)
+  documents    Document[]    // ✅ Added reverse relation for Document
+
+  @@unique([client_id, service_id, booking_date])
+  @@index([client_id])
+  @@index([service_id])
+  @@index([status])
+  @@index([booking_date])
+  @@map("bookings")
+}
+
+// Document Model
+model Document {
+  id                Int           @id @default(autoincrement())
+  client_id         Int
+  booking_id        Int?
+  document_type     DocumentType
+  template_data     Json
+  generated_content String        @db.Text
+  status            DocumentStatus @default(generated)
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  
+  // Relations
+  client            User          @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  booking           Booking?      @relation(fields: [booking_id], references: [id], onDelete: SetNull)
+
+  @@index([client_id])
+  @@index([booking_id])
+  @@index([document_type])
+  @@map("documents")
+}

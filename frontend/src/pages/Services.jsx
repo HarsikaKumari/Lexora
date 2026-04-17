@@ -4,13 +4,19 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const LEGAL_ISSUES = [
-  'divorce',
-  'property',
-  'criminal',
-  'corporate',
-  'family',
-  'civil',
-  'tax',
+  'family_law',
+  'criminal_law',
+  'corporate_law',
+  'property_law',
+  'labor_law',
+  'tax_law',
+  'intellectual_property',
+  'immigration_law',
+  'human_rights',
+  'contract_law',
+  'tort_law',
+  'constitutional_law',
+  'other',
 ];
 const DOC_TYPES = [
   'affidavit',
@@ -49,9 +55,11 @@ export default function Services() {
         Object.entries(filters).filter(([, v]) => v),
       );
       const res = await api.get('/services', { params });
-      setServices(res.data);
+      // Fix: Access the services array from the response
+      setServices(res.data.services || []);
     } catch (err) {
       console.error(err);
+      setServices([]); // Set empty array on error
     } finally {
       setLoading(false);
     }

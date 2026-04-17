@@ -108,6 +108,9 @@ export default function Login() {
         </div>
 
         {/* Footer */}
+        <p className='text-white mt-5 text-xs'>
+          test user: harsika8@gmail.com, pass: 123456
+        </p>
         <p className='text-slate-600 text-xs'>
           © 2025 LegalConnect Technologies Pvt. Ltd.
         </p>
@@ -133,11 +136,10 @@ export default function Login() {
                 key={r}
                 type='button'
                 onClick={() => setRole(r)}
-                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
-                  role === r
-                    ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${role === r
+                  ? 'bg-white text-slate-900 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 {r}
               </button>

@@ -3,13 +3,19 @@ import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
 const LEGAL_ISSUES = [
-  'divorce',
-  'property',
-  'criminal',
-  'corporate',
-  'family',
-  'civil',
-  'tax',
+  'family_law',
+  'criminal_law',
+  'corporate_law',
+  'property_law',
+  'labor_law',
+  'tax_law',
+  'intellectual_property',
+  'immigration_law',
+  'human_rights',
+  'contract_law',
+  'tort_law',
+  'constitutional_law',
+  'other',
 ];
 const DOC_TYPES = [
   'affidavit',

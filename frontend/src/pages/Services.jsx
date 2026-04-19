@@ -26,16 +26,6 @@ const DOC_TYPES = [
   'power_of_attorney',
 ];
 
-const issueBadge = {
-  divorce: 'bg-pink-50 text-pink-700',
-  property: 'bg-amber-50 text-amber-700',
-  criminal: 'bg-red-50 text-red-700',
-  corporate: 'bg-blue-50 text-blue-700',
-  family: 'bg-purple-50 text-purple-700',
-  civil: 'bg-teal-50 text-teal-700',
-  tax: 'bg-green-50 text-green-700',
-};
-
 export default function Services() {
   const [services, setServices] = useState([]);
   const [filters, setFilters] = useState({
@@ -55,11 +45,10 @@ export default function Services() {
         Object.entries(filters).filter(([, v]) => v),
       );
       const res = await api.get('/services', { params });
-      // Fix: Access the services array from the response
       setServices(res.data.services || []);
     } catch (err) {
       console.error(err);
-      setServices([]); // Set empty array on error
+      setServices([]);
     } finally {
       setLoading(false);
     }
@@ -69,73 +58,109 @@ export default function Services() {
     fetchServices();
   }, []);
 
+  const initials = user?.name
+    ?.split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
-    <div className='max-w-7xl mx-auto px-6 py-10'>
-      {/* Page header */}
-      <div className='mb-8'>
-        <h1 className='text-2xl font-semibold text-slate-900'>
-          Legal Services
-        </h1>
-        <p className='text-slate-500 text-sm mt-1'>
-          Find and book verified legal professionals across India
-        </p>
+    <div className='min-h-screen bg-slate-50'>
+      {/* Hero */}
+      <div
+        className='relative overflow-hidden px-7 py-10'
+        style={{ background: '#185FA5' }}
+      >
+        <div
+          className='absolute rounded-full'
+          style={{
+            width: 260,
+            height: 260,
+            background: 'rgba(255,255,255,0.05)',
+            right: -60,
+            top: -80,
+          }}
+        />
+        <div
+          className='absolute rounded-full'
+          style={{
+            width: 180,
+            height: 180,
+            background: 'rgba(255,255,255,0.04)',
+            right: 120,
+            bottom: -90,
+          }}
+        />
+        <div className='relative text-center max-w-xl mx-auto'>
+          <h1 className='text-[28px] font-medium text-white tracking-tight'>
+            Find trusted legal experts
+          </h1>
+          <p
+            className='text-[13px] mt-2'
+            style={{ color: 'rgba(255,255,255,0.7)' }}
+          >
+            Connect with verified lawyers across India and get professional
+            legal help instantly.
+          </p>
+        </div>
       </div>
 
       {/* Filter bar */}
-      <div className='bg-white border border-slate-200 rounded-xl p-4 mb-6'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-          <input
-            placeholder='Search by keyword...'
-            className='border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition'
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-          />
-          <select
-            className='border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition'
-            value={filters.legal_issue}
-            onChange={(e) =>
-              setFilters({ ...filters, legal_issue: e.target.value })
-            }
-          >
-            <option value=''>All legal issues</option>
-            {LEGAL_ISSUES.map((i) => (
-              <option
-                key={i}
-                value={i}
-              >
-                {i.charAt(0).toUpperCase() + i.slice(1)}
-              </option>
-            ))}
-          </select>
-          <select
-            className='border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition'
-            value={filters.document_type}
-            onChange={(e) =>
-              setFilters({ ...filters, document_type: e.target.value })
-            }
-          >
-            <option value=''>All document types</option>
-            {DOC_TYPES.map((d) => (
-              <option
-                key={d}
-                value={d}
-              >
-                {d.replace(/_/g, ' ')}
-              </option>
-            ))}
-          </select>
-          <div className='flex gap-2'>
+      <div className='max-w-6xl mx-auto px-7 -mt-5 mb-8 relative z-10'>
+        <div className='bg-white border border-slate-200 rounded-xl p-4 shadow-sm'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3'>
             <input
-              placeholder='City or region'
-              className='flex-1 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition'
-              value={filters.region}
+              placeholder='Search services…'
+              className='col-span-2 border border-slate-200 rounded-lg px-4 py-2.5 text-[13px] focus:outline-none focus:ring-2 text-slate-700 placeholder-slate-400'
+              style={{ '--tw-ring-color': '#185FA5' }}
+              value={filters.search}
               onChange={(e) =>
-                setFilters({ ...filters, region: e.target.value })
+                setFilters({ ...filters, search: e.target.value })
               }
             />
+            <select
+              className='border border-slate-200 rounded-lg px-3 py-2.5 text-[13px] text-slate-700 focus:outline-none'
+              value={filters.legal_issue}
+              onChange={(e) =>
+                setFilters({ ...filters, legal_issue: e.target.value })
+              }
+            >
+              <option value=''>All issues</option>
+              {LEGAL_ISSUES.map((i) => (
+                <option
+                  key={i}
+                  value={i}
+                >
+                  {i.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </select>
+            <select
+              className='border border-slate-200 rounded-lg px-3 py-2.5 text-[13px] text-slate-700 focus:outline-none'
+              value={filters.document_type}
+              onChange={(e) =>
+                setFilters({ ...filters, document_type: e.target.value })
+              }
+            >
+              <option value=''>All docs</option>
+              {DOC_TYPES.map((d) => (
+                <option
+                  key={d}
+                  value={d}
+                >
+                  {d.replace(/_/g, ' ')}
+                </option>
+              ))}
+            </select>
             <button
               onClick={fetchServices}
-              className='bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors whitespace-nowrap'
+              className='text-[13px] font-medium text-white rounded-lg px-4 py-2.5 transition-colors'
+              style={{ background: '#185FA5' }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.background = '#0C447C')
+              }
+              onMouseOut={(e) => (e.currentTarget.style.background = '#185FA5')}
             >
               Search
             </button>
@@ -144,78 +169,156 @@ export default function Services() {
       </div>
 
       {/* Results */}
-      {loading ? (
-        <div className='text-center py-20 text-slate-400 text-sm'>
-          Loading services...
-        </div>
-      ) : services.length === 0 ? (
-        <div className='text-center py-20'>
-          <p className='text-slate-400 text-sm'>
-            No services found. Try adjusting your filters.
-          </p>
-        </div>
-      ) : (
-        <>
-          <p className='text-xs text-slate-400 mb-4'>
-            {services.length} service{services.length !== 1 ? 's' : ''} found
-          </p>
-          <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {services.map((s) => (
-              <div
-                key={s.id}
-                className='bg-white border border-slate-200 rounded-xl p-5 flex flex-col hover:border-slate-300 transition-colors'
-              >
-                <div className='flex items-start justify-between gap-2 mb-3'>
-                  <div className='min-w-0'>
-                    <h3 className='font-medium text-slate-900 text-sm leading-snug truncate'>
-                      {s.title}
-                    </h3>
-                    <p className='text-xs text-slate-500 mt-0.5'>
-                      {s.lawyer_name}
-                    </p>
-                  </div>
-                  <span className='text-sm font-semibold text-slate-900 whitespace-nowrap'>
-                    ₹{s.price}
-                  </span>
-                </div>
-
-                <p className='text-xs text-slate-500 leading-relaxed mb-4 flex-1 line-clamp-2'>
-                  {s.description}
-                </p>
-
-                <div className='flex flex-wrap gap-1.5 mb-4'>
-                  {s.legal_issue && (
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${issueBadge[s.legal_issue] || 'bg-slate-100 text-slate-600'}`}
-                    >
-                      {s.legal_issue}
-                    </span>
-                  )}
-                  {s.document_type && (
-                    <span className='text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600'>
-                      {s.document_type.replace(/_/g, ' ')}
-                    </span>
-                  )}
-                  {s.region && (
-                    <span className='text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600'>
-                      {s.region}
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  onClick={() =>
-                    user ? navigate(`/book/${s.id}`) : navigate('/login')
-                  }
-                  className='w-full bg-slate-900 text-white py-2 rounded-lg text-xs font-medium hover:bg-slate-700 transition-colors'
-                >
-                  Book consultation
-                </button>
-              </div>
-            ))}
+      <div className='max-w-6xl mx-auto px-7 pb-12'>
+        {loading ? (
+          <div className='text-center py-20'>
+            <div
+              className='w-10 h-10 rounded-full border-2 border-t-transparent mx-auto mb-3 animate-spin'
+              style={{ borderColor: '#185FA5', borderTopColor: 'transparent' }}
+            />
+            <p className='text-[13px] text-slate-400'>Loading services…</p>
           </div>
-        </>
-      )}
+        ) : services.length === 0 ? (
+          <div className='text-center py-20 bg-white border border-slate-200 rounded-xl'>
+            <div
+              className='rounded-full flex items-center justify-center mx-auto mb-3'
+              style={{ width: 52, height: 52, background: '#E6F1FB' }}
+            >
+              <svg
+                className='w-5 h-5'
+                style={{ stroke: '#185FA5' }}
+                fill='none'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={1.5}
+                  d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
+                />
+              </svg>
+            </div>
+            <p className='text-[14px] font-medium text-slate-500'>
+              No services found
+            </p>
+            <p className='text-[13px] text-slate-400 mt-1'>
+              Try adjusting your filters.
+            </p>
+          </div>
+        ) : (
+          <>
+            <p className='text-[12px] text-slate-400 mb-5 font-medium uppercase tracking-wide'>
+              {services.length} service{services.length !== 1 ? 's' : ''} found
+            </p>
+            <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+              {services.map((s) => (
+                <div
+                  key={s.id}
+                  className='bg-white border border-slate-200 rounded-xl p-5 flex flex-col hover:border-blue-200 transition-colors'
+                  style={{ '--hover-border': '#B5D4F4' }}
+                >
+                  {/* Header */}
+                  <div className='flex items-start justify-between gap-3 mb-4'>
+                    <div className='flex items-start gap-3 min-w-0'>
+                      <div
+                        className='w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5'
+                        style={{ background: '#E6F1FB' }}
+                      >
+                        <svg
+                          className='w-4 h-4'
+                          style={{ stroke: '#185FA5' }}
+                          fill='none'
+                          viewBox='0 0 24 24'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth={1.5}
+                            d='M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3'
+                          />
+                        </svg>
+                      </div>
+                      <div className='min-w-0'>
+                        <h3 className='text-[14px] font-medium text-slate-900 leading-snug'>
+                          {s.title}
+                        </h3>
+                        <p className='text-[12px] text-slate-400 mt-0.5'>
+                          by{' '}
+                          <span className='text-slate-600 font-medium'>
+                            {s.lawyer_name}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      className='text-[13px] font-medium px-2.5 py-1 rounded-lg flex-shrink-0'
+                      style={{ background: '#E6F1FB', color: '#0C447C' }}
+                    >
+                      ₹{s.price}
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  {s.description && (
+                    <div className='mb-4 bg-slate-50 rounded-lg px-3 py-2.5'>
+                      <p className='text-[12px] text-slate-600 line-clamp-2 leading-relaxed'>
+                        {s.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Tags */}
+                  <div className='flex flex-wrap gap-1.5 mb-5'>
+                    {s.legal_issue && (
+                      <span
+                        className='text-[11px] font-medium px-2.5 py-1 rounded-full'
+                        style={{ background: '#E6F1FB', color: '#185FA5' }}
+                      >
+                        {s.legal_issue.replace(/_/g, ' ')}
+                      </span>
+                    )}
+                    {s.document_type && (
+                      <span className='text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600'>
+                        {s.document_type.replace(/_/g, ' ')}
+                      </span>
+                    )}
+                    {s.region && (
+                      <span
+                        className='text-[11px] font-medium px-2.5 py-1 rounded-full'
+                        style={{ background: '#EAF3DE', color: '#3B6D11' }}
+                      >
+                        {s.region}
+                      </span>
+                    )}
+                    {s.duration_minutes && (
+                      <span className='text-[11px] font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-500'>
+                        {s.duration_minutes} min
+                      </span>
+                    )}
+                  </div>
+
+                  {/* CTA */}
+                  <button
+                    onClick={() =>
+                      user ? navigate(`/book/${s.id}`) : navigate('/login')
+                    }
+                    className='mt-auto w-full text-[13px] font-medium text-white py-2.5 rounded-lg transition-colors'
+                    style={{ background: '#185FA5' }}
+                    onMouseOver={(e) =>
+                      (e.currentTarget.style.background = '#0C447C')
+                    }
+                    onMouseOut={(e) =>
+                      (e.currentTarget.style.background = '#185FA5')
+                    }
+                  >
+                    Book consultation
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

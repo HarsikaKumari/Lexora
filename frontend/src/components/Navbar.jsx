@@ -6,24 +6,32 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ Hide navbar on auth pages
   const hideOn = ['/login', '/register'];
   if (hideOn.includes(location.pathname)) return null;
 
   const roleMeta = {
-    admin: { label: 'Admin', bg: 'bg-amber-100', text: 'text-amber-800' },
-    lawyer: { label: 'Lawyer', bg: 'bg-purple-100', text: 'text-purple-800' },
-    client: { label: 'Client', bg: 'bg-blue-100', text: 'text-blue-800' },
+    admin: { label: 'Admin' },
+    lawyer: { label: 'Lawyer' },
+    client: { label: 'Client' },
   };
+
   const meta = roleMeta[user?.role] || {};
+
+  const initials = user?.name
+    ? user.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+    : 'U';
 
   const navLink = (to, label) => (
     <Link
       to={to}
-      className={`text-sm transition-colors ${
+      className={`text-[13px] px-3 py-1.5 rounded-md transition ${
         location.pathname === to
-          ? 'text-slate-900 font-medium'
-          : 'text-slate-500 hover:text-slate-800'
+          ? 'bg-white/20 text-white font-medium'
+          : 'text-white/60 hover:text-white'
       }`}
     >
       {label}
@@ -31,66 +39,90 @@ export default function Navbar() {
   );
 
   return (
-    <header className='bg-white border-b border-slate-200 sticky top-0 z-50'>
-      <div className='max-w-7xl mx-auto px-6 h-14 flex items-center justify-between'>
-        <Link
-          to='/'
-          className='flex items-center gap-2.5'
+    <nav
+      style={{ background: '#0C447C' }}
+      className='flex items-center justify-between px-7 h-14 sticky top-0 z-50'
+    >
+      {/* Logo */}
+      <Link
+        to='/'
+        className='flex items-center gap-3'
+      >
+        <div
+          className='w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-medium'
+          style={{ background: 'rgba(255,255,255,0.15)' }}
         >
-          <div className='w-7 h-7 bg-slate-900 rounded-md flex items-center justify-center'>
-            <span className='text-white text-xs font-bold'>LC</span>
-          </div>
-          <span className='font-semibold text-slate-900 text-sm'>
-            LegalConnect
-          </span>
-        </Link>
-
-        <nav className='hidden md:flex items-center gap-6'>
-          {navLink('/services', 'Browse Services')}
-          {user?.role === 'client' && navLink('/client', 'My Dashboard')}
-          {user?.role === 'lawyer' && navLink('/lawyer', 'My Dashboard')}
-          {user?.role === 'admin' && navLink('/admin', 'Admin Panel')}
-        </nav>
-
-        <div className='flex items-center gap-3'>
-          {user ? (
-            <>
-              <div className='hidden sm:flex items-center gap-2'>
-                <span className='text-sm text-slate-700'>{user.name}</span>
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${meta.bg} ${meta.text}`}
-                >
-                  {meta.label}
-                </span>
-              </div>
-              <button
-                onClick={() => {
-                  logout();
-                  navigate('/login');
-                }}
-                className='text-sm text-slate-500 hover:text-slate-800 border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors'
-              >
-                Sign out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                to='/login'
-                className='text-sm text-slate-600 hover:text-slate-900 transition-colors'
-              >
-                Sign in
-              </Link>
-              <Link
-                to='/register'
-                className='text-sm bg-slate-900 text-white px-4 py-1.5 rounded-lg hover:bg-slate-700 transition-colors'
-              >
-                Get started
-              </Link>
-            </>
-          )}
+          LC
         </div>
+        <span className='text-white font-medium text-[15px]'>LegalConnect</span>
+      </Link>
+
+      {/* Nav Links */}
+      <div className='flex gap-1'>
+        {navLink('/services', 'Browse services')}
+
+        {user?.role === 'client' && navLink('/client', 'My dashboard')}
+        {user?.role === 'lawyer' && navLink('/lawyer', 'My dashboard')}
+        {user?.role === 'admin' && navLink('/admin', 'Admin panel')}
       </div>
-    </header>
+
+      {/* Right Section */}
+      <div className='flex items-center gap-2.5'>
+        {user ? (
+          <>
+            <div
+              className='w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium'
+              style={{ background: 'rgba(255,255,255,0.2)' }}
+            >
+              {initials}
+            </div>
+
+            <span
+              className='text-[13px]'
+              style={{ color: 'rgba(255,255,255,0.85)' }}
+            >
+              {user.name}
+            </span>
+
+            <span
+              className='text-[11px] px-2.5 py-1 rounded-full font-medium text-white'
+              style={{ background: 'rgba(255,255,255,0.18)' }}
+            >
+              {meta.label}
+            </span>
+
+            <button
+              onClick={() => {
+                logout();
+                navigate('/login');
+              }}
+              className='text-[12px] px-3 py-1.5 rounded-md border'
+              style={{
+                color: 'rgba(255,255,255,0.65)',
+                borderColor: 'rgba(255,255,255,0.25)',
+                background: 'transparent',
+              }}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <Link
+              to='/login'
+              className='text-[13px] text-white/70 hover:text-white'
+            >
+              Sign in
+            </Link>
+            <Link
+              to='/register'
+              className='text-[13px] bg-white text-[#0C447C] px-3 py-1.5 rounded-md font-medium hover:bg-slate-100'
+            >
+              Get started
+            </Link>
+          </>
+        )}
+      </div>
+    </nav>
   );
 }

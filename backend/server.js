@@ -9,10 +9,11 @@ const documentRoutes = require('./routes/documents');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-
+const publicUri=process.env.PUBLIC_URI;
 app.use(
   cors({
     origin: [
+      publicUri ||'https://lexora-xi-liart.vercel.app',
       'http://localhost:5173', // No trailing slash
       'http://127.0.0.1:5173', // Add both localhost and 127.0.0.1
       'http://localhost:3000',

@@ -13,14 +13,16 @@ const publicUri=process.env.PUBLIC_URI;
 app.use(
   cors({
     origin: [
-      publicUri ||'https://lexora-xi-liart.vercel.app',
-      'http://localhost:5173', // No trailing slash
-      'http://127.0.0.1:5173', // Add both localhost and 127.0.0.1
+      'https://lexora-xi-liart.vercel.app', // WITHOUT trailing slash
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
       'http://localhost:3000',
       'http://127.0.0.1:3000',
     ],
     credentials: true,
-  }),
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // OPTIONS important hai
+    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allow headers
+  })
 );
 app.use(express.json());
 

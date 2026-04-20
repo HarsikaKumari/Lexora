@@ -28,10 +28,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (data) => {
-    const res = await api.post('/auth/register', data);
-    localStorage.setItem('token', res.data.token);
-    setUser(res.data.user);
-    return res.data.user;
+    try {
+      const res = await api.post('/api/auth/register', data);
+      localStorage.setItem('token', res.data.token);
+      setUser(res.data.user);
+      return res.data.user;
+    } catch (error) {
+      console.error('Register failed:', error.response?.data || error.message);
+      throw error;
+    }
   };
 
   const logout = () => {

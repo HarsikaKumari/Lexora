@@ -109,7 +109,16 @@ export default function Login() {
 
         {/* Footer */}
         <p className='text-white mt-5 text-xs'>
-          test user: harsika8@gmail.com, pass: 123456
+          test user: "abc@gmail.com", "12345"
+          admin:
+          {/* "name": "harshii", */}
+          "harshiadmin@gmail.com",
+          "123456",
+          {/* "role":"admin", */}
+          {/* "unique_identifier":"1234", */}
+          {/* "region":"delhi" */}
+          lawyer: "kumari@gmail.com",
+          "kumari"
         </p>
         <p className='text-slate-600 text-xs'>
           © 2025 LegalConnect Technologies Pvt. Ltd.

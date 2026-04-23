@@ -69,9 +69,12 @@ export default function LawyerDashboard() {
     api.get('/bookings/my').then((res) => setBookings(res.data));
     api
       .get('/services')
-      .then((res) =>
-        setServices(res.data.filter((s) => s.lawyer_id === user?.id)),
+      .then((res) => setServices(res.data.services.filter((s) => s.lawyer_id === user?.id))
+        // console.log(res.data.services);
+        // setServices(res.data.filter((s) => s.lawyer_id === user?.id)),
+        // }
       );
+    // alert("Hello from useEffect");
   }, [user]);
 
   const handleCreateService = async (e) => {
@@ -94,12 +97,12 @@ export default function LawyerDashboard() {
     setBookings(bookings.map((b) => (b.id === id ? { ...b, status } : b)));
   };
 
-  const initials = user?.name
-    ?.split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  // const initials = user?.name
+  //   ?.split(' ')
+  //   .map((n) => n[0])
+  //   .join('')
+  //   .slice(0, 2)
+  //   .toUpperCase();
 
   if (!user?.is_verified) {
     return (
@@ -289,11 +292,10 @@ export default function LawyerDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${
-                tab === t.key
-                  ? 'border-blue-700 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
-              }`}
+              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${tab === t.key
+                ? 'border-blue-700 text-blue-700'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
             >
               {t.label}
             </button>
@@ -412,10 +414,10 @@ export default function LawyerDashboard() {
                 style={
                   creating
                     ? {
-                        background: 'transparent',
-                        color: '#185FA5',
-                        border: '0.5px solid #B5D4F4',
-                      }
+                      background: 'transparent',
+                      color: '#185FA5',
+                      border: '0.5px solid #B5D4F4',
+                    }
                     : { background: '#185FA5', color: '#fff', border: 'none' }
                 }
               >

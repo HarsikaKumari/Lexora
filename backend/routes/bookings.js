@@ -71,91 +71,31 @@ router.get('/my', authenticate, async (req, res) => {
     let bookings;
 
     if (req.user.role === 'client') {
-      // Get bookings made by the client
       bookings = await prisma.booking.findMany({
-        where: {
-          client_id: req.user.id,
-        },
+        where: { client_id: req.user.id },
         include: {
           service: {
-            include: {
-              lawyer: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  region: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
+            include: { lawyer: true }
+          }
+        }
       });
-
-      // Format the response for client view
-      const formattedBookings = bookings.map((booking) => ({
-        id: booking.id,
-        service_id: booking.service_id,
-        service_title: booking.service.title,
-        price: booking.service.price,
-        lawyer_name: booking.service.lawyer.name,
-        lawyer_email: booking.service.lawyer.email,
-        booking_date: booking.booking_date,
-        notes: booking.notes,
-        status: booking.status,
-        created_at: booking.created_at,
-      }));
-
-      res.json(formattedBookings);
     } else {
-      // Lawyer view - get bookings for their services
+      // Lawyer ke liye - Prisma se hi
       bookings = await prisma.booking.findMany({
         where: {
           service: {
-            lawyer_id: req.user.id,
-          },
+            lawyer_id: req.user.id
+          }
         },
         include: {
-          client: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-            },
-          },
-          service: {
-            select: {
-              id: true,
-              title: true,
-              price: true,
-              description: true,
-            },
-          },
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
+          client: true,
+          service: true
+        }
       });
-
-      // Format the response for lawyer view
-      const formattedBookings = bookings.map((booking) => ({
-        id: booking.id,
-        service_id: booking.service_id,
-        service_title: booking.service.title,
-        client_name: booking.client.name,
-        client_email: booking.client.email,
-        booking_date: booking.booking_date,
-        notes: booking.notes,
-        status: booking.status,
-        created_at: booking.created_at,
-      }));
-
-      res.json(formattedBookings);
     }
+
+    res.json(bookings);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch bookings' });

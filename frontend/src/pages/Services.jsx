@@ -58,12 +58,12 @@ export default function Services() {
     fetchServices();
   }, []);
 
-  const initials = user?.name
-    ?.split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  // const initials = user?.name
+  //   ?.split(' ')
+  //   .map((n) => n[0])
+  //   .join('')
+  //   .slice(0, 2)
+  //   .toUpperCase();
 
   return (
     <div className='min-h-screen bg-slate-50'>

@@ -66,9 +66,9 @@ export default function LawyerDashboard() {
   const { user } = useAuth();
 
   useEffect(() => {
-    api.get('/bookings/my').then((res) => setBookings(res.data));
+    api.get('/api/bookings/my').then((res) => setBookings(res.data));
     api
-      .get('/services')
+      .get('/api/services')
       .then((res) => setServices(res.data.services.filter((s) => s.lawyer_id === user?.id))
       );
   }, [user]);
@@ -77,7 +77,7 @@ export default function LawyerDashboard() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const res = await api.post('/services', form);
+      const res = await api.post('/api/services', form);
       setServices([res.data, ...services]);
       setCreating(false);
       setForm(emptyForm);
@@ -89,7 +89,7 @@ export default function LawyerDashboard() {
   };
 
   const updateStatus = async (id, status) => {
-    await api.patch(`/bookings/${id}/status`, { status });
+    await api.patch(`/api/bookings/${id}/status`, { status });
     setBookings(bookings.map((b) => (b.id === id ? { ...b, status } : b)));
   };
 

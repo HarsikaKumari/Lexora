@@ -70,11 +70,7 @@ export default function LawyerDashboard() {
     api
       .get('/services')
       .then((res) => setServices(res.data.services.filter((s) => s.lawyer_id === user?.id))
-        // console.log(res.data.services);
-        // setServices(res.data.filter((s) => s.lawyer_id === user?.id)),
-        // }
       );
-    // alert("Hello from useEffect");
   }, [user]);
 
   const handleCreateService = async (e) => {

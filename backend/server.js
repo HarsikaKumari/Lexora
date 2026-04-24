@@ -9,7 +9,7 @@ const documentRoutes = require('./routes/documents');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-const publicUri=process.env.PUBLIC_URI;
+const publicUri = process.env.PUBLIC_URI;
 app.use(
   cors({
     origin: [
@@ -27,11 +27,11 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/services', serviceRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/documents', documentRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/auth', authRoutes);
+app.use('/services', serviceRoutes);
+app.use('/bookings', bookingRoutes);
+app.use('/documents', documentRoutes);
+app.use('/admin', adminRoutes);
 
 // Health check
 app.get('/', (req, res) => res.json({ message: 'LegalConnect API running' }));

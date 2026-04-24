@@ -53,7 +53,7 @@ Filed on: {{date}}
 Petitioner Signature: _______________`,
 };
 
-// POST /api/documents/generate
+// POST /documents/generate
 router.post(
   '/generate',
   authenticate,
@@ -148,7 +148,7 @@ router.post(
   },
 );
 
-// GET /api/documents/my
+// GET /documents/my
 router.get('/my', authenticate, async (req, res) => {
   try {
     const documents = await prisma.document.findMany({
@@ -192,7 +192,7 @@ router.get('/my', authenticate, async (req, res) => {
   }
 });
 
-// GET /api/documents/:id
+// GET /documents/:id
 router.get('/:id', authenticate, async (req, res) => {
   const documentId = parseInt(req.params.id);
 
@@ -240,7 +240,7 @@ router.get('/:id', authenticate, async (req, res) => {
   }
 });
 
-// GET /api/documents/:id/download
+// GET /documents/:id/download
 router.get('/:id/download', authenticate, async (req, res) => {
   const documentId = parseInt(req.params.id);
 
@@ -270,7 +270,7 @@ router.get('/:id/download', authenticate, async (req, res) => {
   }
 });
 
-// PUT /api/documents/:id
+// PUT /documents/:id
 router.put('/:id', authenticate, authorize('client'), async (req, res) => {
   const documentId = parseInt(req.params.id);
   const { template_data } = req.body;
@@ -319,7 +319,7 @@ router.put('/:id', authenticate, authorize('client'), async (req, res) => {
   }
 });
 
-// DELETE /api/documents/:id
+// DELETE /documents/:id
 router.delete('/:id', authenticate, async (req, res) => {
   const documentId = parseInt(req.params.id);
 
@@ -350,7 +350,7 @@ router.delete('/:id', authenticate, async (req, res) => {
   }
 });
 
-// GET /api/documents/templates/:type
+// GET /documents/templates/:type
 router.get('/templates/:type', authenticate, async (req, res) => {
   const { type } = req.params;
 
@@ -369,7 +369,7 @@ router.get('/templates/:type', authenticate, async (req, res) => {
   });
 });
 
-// GET /api/documents/templates/list
+// GET /documents/templates/list
 router.get('/templates/list', authenticate, async (req, res) => {
   const templateList = Object.keys(TEMPLATES).map((type) => ({
     type: type,

@@ -5,7 +5,7 @@ const { prisma } = require('../utils/prisma');
 
 const router = express.Router();
 
-// GET /api/services — public, with filters
+// GET /services — public, with filters
 router.get('/', async (req, res) => {
   const {
     legal_issue,
@@ -113,7 +113,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/services/:id
+// GET /services/:id
 router.get('/:id', async (req, res) => {
   const serviceId = parseInt(req.params.id);
 
@@ -163,7 +163,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/services — lawyers only
+// POST /services — lawyers only
 router.post('/', authenticate, authorize('lawyer'), async (req, res) => {
   const {
     title,
@@ -227,7 +227,7 @@ router.post('/', authenticate, authorize('lawyer'), async (req, res) => {
   }
 });
 
-// PUT /api/services/:id — lawyers only (own services)
+// PUT /services/:id — lawyers only (own services)
 router.put('/:id', authenticate, authorize('lawyer'), async (req, res) => {
   const serviceId = parseInt(req.params.id);
   const {
@@ -291,7 +291,7 @@ router.put('/:id', authenticate, authorize('lawyer'), async (req, res) => {
   }
 });
 
-// DELETE /api/services/:id — lawyers only (delete own service)
+// DELETE /services/:id — lawyers only (delete own service)
 router.delete('/:id', authenticate, authorize('lawyer'), async (req, res) => {
   const serviceId = parseInt(req.params.id);
 
@@ -340,7 +340,7 @@ router.delete('/:id', authenticate, authorize('lawyer'), async (req, res) => {
   }
 });
 
-// GET /api/services/lawyer/my-services — get lawyer's own services
+// GET /services/lawyer/my-services — get lawyer's own services
 router.get(
   '/lawyer/my-services',
   authenticate,
@@ -386,7 +386,7 @@ router.get(
   },
 );
 
-// GET /api/services/categories/legal-issues — get distinct legal issues
+// GET /services/categories/legal-issues — get distinct legal issues
 router.get('/categories/legal-issues', async (req, res) => {
   try {
     const services = await prisma.service.findMany({
@@ -408,7 +408,7 @@ router.get('/categories/legal-issues', async (req, res) => {
   }
 });
 
-// GET /api/services/categories/document-types — get distinct document types
+// GET /services/categories/document-types — get distinct document types
 router.get('/categories/document-types', async (req, res) => {
   try {
     const services = await prisma.service.findMany({
@@ -430,7 +430,7 @@ router.get('/categories/document-types', async (req, res) => {
   }
 });
 
-// GET /api/services/regions — get distinct regions
+// GET /services/regions — get distinct regions
 router.get('/categories/regions', async (req, res) => {
   try {
     const services = await prisma.service.findMany({

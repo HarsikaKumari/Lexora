@@ -4,7 +4,7 @@ const { prisma } = require('../utils/prisma');
 
 const router = express.Router();
 
-// GET /api/admin/users — all users
+// GET /admin/users — all users
 router.get('/users', authenticate, authorize('admin'), async (req, res) => {
   try {
     const users = await prisma.user.findMany({
@@ -29,7 +29,7 @@ router.get('/users', authenticate, authorize('admin'), async (req, res) => {
   }
 });
 
-// PATCH /api/admin/users/:id/verify — verify a lawyer
+// PATCH /admin/users/:id/verify — verify a lawyer
 router.patch(
   '/users/:id/verify',
   authenticate,
@@ -63,7 +63,7 @@ router.patch(
   },
 );
 
-// GET /api/admin/stats
+// GET /admin/stats
 router.get('/stats', authenticate, authorize('admin'), async (req, res) => {
   try {
     // Run all count queries in parallel using Prisma

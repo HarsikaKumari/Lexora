@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { prisma } = require('../utils/prisma');
 const router = express.Router();
 
-// POST /api/auth/register
+// POST /auth/register
 router.post('/register', async (req, res) => {
   const { name, email, password, role, unique_identifier, region } = req.body;
   console.log('Registering user:🥺🥺🥺🥺', { name, email, role, unique_identifier, region });
@@ -55,7 +55,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+// POST /auth/login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -95,7 +95,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET /api/auth/me
+// GET /auth/me
 router.get(
   '/me',
   require('../middleware/auth').authenticate,

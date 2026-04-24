@@ -194,11 +194,10 @@ export default function ClientDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${
-                tab === t.key
+              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${tab === t.key
                   ? 'border-blue-700 text-blue-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
-              }`}
+                }`}
             >
               {t.label}
             </button>

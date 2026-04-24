@@ -5,7 +5,7 @@ const { prisma } = require('../utils/prisma');
 
 const router = express.Router();
 
-// POST /api/bookings — clients only
+// POST /bookings — clients only
 router.post('/', authenticate, authorize('client'), async (req, res) => {
   const { service_id, booking_date, booking_time, notes } = req.body;
 
@@ -65,7 +65,7 @@ router.post('/', authenticate, authorize('client'), async (req, res) => {
   }
 });
 
-// GET /api/bookings/my — own bookings
+// GET /bookings/my — own bookings
 router.get('/my', authenticate, async (req, res) => {
   try {
     let bookings;
@@ -102,7 +102,7 @@ router.get('/my', authenticate, async (req, res) => {
   }
 });
 
-// PATCH /api/bookings/:id/status — lawyer or admin
+// PATCH /bookings/:id/status — lawyer or admin
 router.patch(
   '/:id/status',
   authenticate,
@@ -183,7 +183,7 @@ router.patch(
   },
 );
 
-// GET /api/bookings/:id — get specific booking details
+// GET /bookings/:id — get specific booking details
 router.get('/:id', authenticate, async (req, res) => {
   const bookingId = parseInt(req.params.id);
 
@@ -238,7 +238,7 @@ router.get('/:id', authenticate, async (req, res) => {
   }
 });
 
-// DELETE /api/bookings/:id — cancel booking (client can cancel pending bookings)
+// DELETE /bookings/:id — cancel booking (client can cancel pending bookings)
 router.delete('/:id', authenticate, async (req, res) => {
   const bookingId = parseInt(req.params.id);
 

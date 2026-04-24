@@ -239,15 +239,15 @@ export default function AdminPanel() {
                     style={
                       filter === f
                         ? {
-                            background: '#185FA5',
-                            color: '#fff',
-                            border: 'none',
-                          }
+                          background: '#185FA5',
+                          color: '#fff',
+                          border: 'none',
+                        }
                         : {
-                            background: 'transparent',
-                            color: '#64748b',
-                            border: '0.5px solid #e2e8f0',
-                          }
+                          background: 'transparent',
+                          color: '#64748b',
+                          border: '0.5px solid #e2e8f0',
+                        }
                     }
                   >
                     {f}
@@ -369,15 +369,15 @@ export default function AdminPanel() {
                               style={
                                 u.is_verified
                                   ? {
-                                      background: 'transparent',
-                                      color: '#64748b',
-                                      border: '0.5px solid #e2e8f0',
-                                    }
+                                    background: 'transparent',
+                                    color: '#64748b',
+                                    border: '0.5px solid #e2e8f0',
+                                  }
                                   : {
-                                      background: '#185FA5',
-                                      color: '#fff',
-                                      border: 'none',
-                                    }
+                                    background: '#185FA5',
+                                    color: '#fff',
+                                    border: 'none',
+                                  }
                               }
                             >
                               {u.is_verified ? 'Revoke' : 'Verify'}

@@ -102,6 +102,67 @@ router.get('/my', authenticate, async (req, res) => {
   }
 });
 
+// GET /bookings/all — all bookings with pagination (admin only)
+router.get('/all', authenticate, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin only.' });
+    }
+
+    // Pagination parameters (optional)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    // Fetch all bookings with pagination
+    const [bookings, totalCount] = await Promise.all([
+      prisma.booking.findMany({
+        skip: skip,
+        take: limit,
+        include: {
+          client: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          },
+          service: {
+            include: {
+              lawyer: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          created_at: 'desc'
+        }
+      }),
+      prisma.booking.count()
+    ]);
+
+    res.json({
+      data: bookings,
+      pagination: {
+        current_page: page,
+        total_pages: Math.ceil(totalCount / limit),
+        total_count: totalCount,
+        limit: limit
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch all bookings' });
+  }
+});
+
 // PATCH /bookings/:id/status — lawyer or admin
 router.patch(
   '/:id/status',

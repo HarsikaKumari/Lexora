@@ -20,7 +20,7 @@ app.use(
       'http://127.0.0.1:3000',
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // OPTIONS important hai
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'], // OPTIONS important hai
     allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly allow headers
   })
 );

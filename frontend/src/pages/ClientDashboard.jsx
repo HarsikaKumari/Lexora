@@ -194,10 +194,11 @@ export default function ClientDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${tab === t.key
+              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${
+                tab === t.key
                   ? 'border-blue-700 text-blue-700'
                   : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
+              }`}
             >
               {t.label}
             </button>
@@ -240,23 +241,31 @@ export default function ClientDashboard() {
               </div>
             ) : (
               bookings.map((b) => {
+                console.log(b);
                 const st = statusStyle[b.status] || statusStyle.pending;
                 return (
+                <div className='flex flex-col'>
                   <div
                     key={b.id}
-                    className='bg-white border border-slate-200 rounded-xl px-5 py-4 flex items-center gap-4 hover:border-blue-200 transition-colors'
+                    className='bg-white border border-slate-200 rounded-xl px-5 py-4   items-center gap-4 hover:border-blue-200 transition-colors'
                   >
+                    <div className='flex'>
+
                     <div
                       className={`w-9 h-9 rounded-lg ${st.bg} flex items-center justify-center flex-shrink-0`}
                     >
                       <div className={`w-2 h-2 rounded-full ${st.dot}`} />
                     </div>
+                    <span className='text-black text-lg font-bold capatalize'>
+                      {b.service.lawyer.name.toUpperCase()}{' '}
+                    </span>
+                    <span className='text-black text-lg font-bold '>
+                    </span>
                     <div className='flex-1 min-w-0'>
                       <p className='text-[13px] font-medium text-slate-900 truncate'>
                         {b.title}
                       </p>
                       <p className='text-[12px] text-slate-500 mt-0.5'>
-                        {b.lawyer_name} ·{' '}
                         {new Date(b.booking_date).toLocaleDateString('en-IN', {
                           day: 'numeric',
                           month: 'short',
@@ -270,7 +279,17 @@ export default function ClientDashboard() {
                     >
                       {st.label}
                     </span>
+                    
+                    </div>
+                        <div className='flex items-start px-5 py-3 mt-3 bg-slate-50 rounded-lg text-gray-600 text-[1.2rem]'>
+                        <p className='text-[13px] font-medium text-slate-900 mt-3'>
+                        {b.service.description}
+                      </p>
+                        </div>
+
                   </div>
+                              
+                </div>
                 );
               })
             )}

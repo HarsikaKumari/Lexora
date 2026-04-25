@@ -7,6 +7,9 @@ import Services from './pages/Services';
 import ClientDashboard from './pages/ClientDashboard';
 import LawyerDashboard from './pages/LawyerDashboard';
 import AdminPanel from './pages/AdminPanel';
+import DocumentsPage from './pages/DocumentsPage';
+import DocumentGenerator from './pages/DocumentGenerator';
+import DocumentViewer from './pages/DocumentViewer';
 import BookingPage from './pages/BookingPage';
 
 const PrivateRoute = ({ children, roles }) => {
@@ -41,6 +44,7 @@ export default function App() {
               path='/'
               element={<DashboardRedirect />}
             />
+
             <Route
               path='/login'
               element={<Login />}
@@ -49,6 +53,31 @@ export default function App() {
               path='/register'
               element={<Register />}
             />
+            <Route
+              path='/documents'
+              element={
+                <PrivateRoute roles={['client']}>
+                  <DocumentsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path='/documents/generate'
+              element={
+                <PrivateRoute roles={['client']}>
+                  <DocumentGenerator />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path='/documents/:id'
+              element={
+                <PrivateRoute roles={['client']}>
+                  <DocumentViewer />
+                </PrivateRoute>
+              }
+            />
+
             <Route
               path='/services'
               element={<Services />}

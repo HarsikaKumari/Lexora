@@ -61,6 +61,7 @@ export default function Navbar() {
       <div className='flex gap-1'>
         {navLink('/services', 'Browse services')}
 
+        {user?.role === 'client' && navLink('/documents', 'Documents')}
         {user?.role === 'client' && navLink('/client', 'My dashboard')}
         {user?.role === 'lawyer' && navLink('/lawyer', 'My dashboard')}
         {user?.role === 'admin' && navLink('/admin', 'Admin panel')}

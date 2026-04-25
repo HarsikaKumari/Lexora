@@ -246,23 +246,18 @@ router.get('/:id/download', authenticate, async (req, res) => {
 
   try {
     const document = await prisma.document.findFirst({
-      where: {
-        id: documentId,
-        client_id: req.user.id,
-      },
+      where: { id: documentId, client_id: req.user.id },
     });
 
     if (!document) {
       return res.status(404).json({ error: 'Document not found' });
     }
 
-    // Set response headers for file download
-    res.setHeader('Content-Type', 'text/plain');
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=document_${documentId}_${document.document_type}.txt`,
-    );
+    const filename = `document_${documentId}_${document.document_type}.txt`;
 
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition'); // ← add this
     res.send(document.generated_content);
   } catch (err) {
     console.error(err);

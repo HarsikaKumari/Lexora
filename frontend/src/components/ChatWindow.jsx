@@ -40,7 +40,7 @@ const ChatWindow = ({ otherUserId, otherUserName, onClose, token: propToken }) =
 
         // Socket connection
         console.log('🔌 Connecting socket...');
-        socketRef.current = io('http://localhost:5000', {
+        socketRef.current = io(`${import.meta.env.VITE_API_URL}` || 'http://localhost:5000', {
             auth: { token },
             transports: ['websocket', 'polling'],
         });

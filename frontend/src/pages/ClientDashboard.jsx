@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import ChatWindow from '../components/ChatWindow';
 
 const statusStyle = {
   pending: {
@@ -28,6 +29,8 @@ export default function ClientDashboard() {
   const [bookings, setBookings] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [tab, setTab] = useState('bookings');
+  const [showChat, setShowChat] = useState(false);
+  const [selectedLawyer, setSelectedLawyer] = useState(null);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -36,12 +39,35 @@ export default function ClientDashboard() {
     api.get('/documents/my').then((res) => setDocuments(res.data));
   }, []);
 
-  const initials = user?.name
-    ?.split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
+  const openChatWithLawyer = () => {
+    console.log('📱 Opening chat from client side...');
+    console.log('Current user:', user?.id, user?.name);
+
+    // Get unique lawyers from bookings
+    const uniqueLawyers = [];
+    const lawyerMap = new Map();
+
+    bookings.forEach(booking => {
+      if (booking.service?.lawyer && !lawyerMap.has(booking.service.lawyer.id)) {
+        lawyerMap.set(booking.service.lawyer.id, booking.service.lawyer);
+        uniqueLawyers.push(booking.service.lawyer);
+      }
+    });
+
+    if (uniqueLawyers.length > 0) {
+      console.log('✅ Found lawyer from booking:', uniqueLawyers[0]);
+      setSelectedLawyer(uniqueLawyers[0]);
+      setShowChat(true);
+    } else {
+      // ✅ FALLBACK: Direct lawyer ID agar booking nahi hai toh
+      console.log('⚠️ No lawyer found in bookings, using default lawyer (ID: 10 - harsika)');
+      setSelectedLawyer({
+        id: 10,        // harsika lawyer ki ID
+        name: "harsika (Lawyer)"
+      });
+      setShowChat(true);
+    }
+  };
 
   return (
     <div className='min-h-screen bg-slate-50'>
@@ -82,26 +108,37 @@ export default function ClientDashboard() {
               Here's an overview of your legal activity
             </p>
           </div>
-          <button
-            onClick={() => navigate('/services')}
-            className='flex items-center gap-2 bg-white font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-blue-50 transition-colors'
-            style={{ color: '#0C447C' }}
-          >
-            <svg
-              className='w-3.5 h-3.5'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
+          <div className='flex gap-2'>
+            <button
+              onClick={openChatWithLawyer}
+              className='flex items-center gap-2 bg-white/20 backdrop-blur-sm font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-white/30 transition-colors text-white'
             >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 4v16m8-8H4'
-              />
-            </svg>
-            New booking
-          </button>
+              <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' />
+              </svg>
+              Chat
+            </button>
+            <button
+              onClick={() => navigate('/services')}
+              className='flex items-center gap-2 bg-white font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-blue-50 transition-colors'
+              style={{ color: '#0C447C' }}
+            >
+              <svg
+                className='w-3.5 h-3.5'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M12 4v16m8-8H4'
+                />
+              </svg>
+              New booking
+            </button>
+          </div>
         </div>
       </div>
 
@@ -194,11 +231,10 @@ export default function ClientDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${
-                tab === t.key
-                  ? 'border-blue-700 text-blue-700'
-                  : 'border-transparent text-slate-500 hover:text-slate-800'
-              }`}
+              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${tab === t.key
+                ? 'border-blue-700 text-blue-700'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+                }`}
             >
               {t.label}
             </button>
@@ -244,52 +280,51 @@ export default function ClientDashboard() {
                 console.log(b);
                 const st = statusStyle[b.status] || statusStyle.pending;
                 return (
-                <div className='flex flex-col'>
-                  <div
-                    key={b.id}
-                    className='bg-white border border-slate-200 rounded-xl px-5 py-4   items-center gap-4 hover:border-blue-200 transition-colors'
-                  >
-                    <div className='flex'>
-
+                  <div className='flex flex-col' key={b.id}>
                     <div
-                      className={`w-9 h-9 rounded-lg ${st.bg} flex items-center justify-center flex-shrink-0`}
+                      className='bg-white border border-slate-200 rounded-xl px-5 py-4 items-center gap-4 hover:border-blue-200 transition-colors'
                     >
-                      <div className={`w-2 h-2 rounded-full ${st.dot}`} />
-                    </div>
-                    <span className='text-black text-lg font-bold capatalize'>
-                      {b.service.lawyer.name.toUpperCase()}{' '}
-                    </span>
-                    <span className='text-black text-lg font-bold '>
-                    </span>
-                    <div className='flex-1 min-w-0'>
-                      <p className='text-[13px] font-medium text-slate-900 truncate'>
-                        {b.title}
-                      </p>
-                      <p className='text-[12px] text-slate-500 mt-0.5'>
-                        {new Date(b.booking_date).toLocaleDateString('en-IN', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}{' '}
-                        at {b.booking_time?.slice(0, 5)}
-                      </p>
-                    </div>
-                    <span
-                      className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${st.bg} ${st.text} whitespace-nowrap`}
-                    >
-                      {st.label}
-                    </span>
-                    
-                    </div>
-                        <div className='flex items-start px-5 py-3 mt-3 bg-slate-50 rounded-lg text-gray-600 text-[1.2rem]'>
-                        <p className='text-[13px] font-medium text-slate-900 mt-3'>
-                        {b.service.description}
-                      </p>
+                      <div className='flex'>
+
+                        <div
+                          className={`w-9 h-9 rounded-lg ${st.bg} flex items-center justify-center flex-shrink-0`}
+                        >
+                          <div className={`w-2 h-2 rounded-full ${st.dot}`} />
                         </div>
+                        <span className='text-black text-lg font-bold capitalize'>
+                          {b.service?.lawyer?.name?.toUpperCase() || 'Lawyer'}{' '}
+                        </span>
+                        <span className='text-black text-lg font-bold '>
+                        </span>
+                        <div className='flex-1 min-w-0'>
+                          <p className='text-[13px] font-medium text-slate-900 truncate'>
+                            {b.title}
+                          </p>
+                          <p className='text-[12px] text-slate-500 mt-0.5'>
+                            {new Date(b.booking_date).toLocaleDateString('en-IN', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric',
+                            })}{' '}
+                            at {b.booking_time?.slice(0, 5)}
+                          </p>
+                        </div>
+                        <span
+                          className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${st.bg} ${st.text} whitespace-nowrap`}
+                        >
+                          {st.label}
+                        </span>
+
+                      </div>
+                      <div className='flex items-start px-5 py-3 mt-3 bg-slate-50 rounded-lg text-gray-600 text-[1.2rem]'>
+                        <p className='text-[13px] font-medium text-slate-900 mt-3'>
+                          {b.service?.description}
+                        </p>
+                      </div>
+
+                    </div>
 
                   </div>
-                              
-                </div>
                 );
               })
             )}
@@ -368,6 +403,18 @@ export default function ClientDashboard() {
           </div>
         )}
       </div>
+
+      {/* Chat Window */}
+      {showChat && selectedLawyer && (
+        <ChatWindow
+          otherUserId={selectedLawyer.id}
+          otherUserName={selectedLawyer.name}
+          onClose={() => {
+            setShowChat(false);
+            setSelectedLawyer(null);
+          }}
+        />
+      )}
     </div>
   );
 }

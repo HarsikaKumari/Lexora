@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import ChatWindow from '../components/ChatWindow';
 
 const LEGAL_ISSUES = [
   'family_law',
@@ -63,7 +65,13 @@ export default function LawyerDashboard() {
   const [form, setForm] = useState(emptyForm);
   const [creating, setCreating] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { user } = useAuth();
+  const [showChat, setShowChat] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
+  const { user, token } = useAuth(); // ✅ Token yahan le rahe hain
+
+  // ✅ Debug logs
+  console.log('🔑 LawyerDashboard - Token:', token ? 'Exists' : 'Missing');
+  console.log('👤 User:', user);
 
   useEffect(() => {
     api.get('/bookings/my').then((res) => setBookings(res.data));
@@ -93,12 +101,19 @@ export default function LawyerDashboard() {
     setBookings(bookings.map((b) => (b.id === id ? { ...b, status } : b)));
   };
 
-  // const initials = user?.name
-  //   ?.split(' ')
-  //   .map((n) => n[0])
-  //   .join('')
-  //   .slice(0, 2)
-  //   .toUpperCase();
+  const openChatWithClient = () => {
+    console.log('📱 Opening chat from lawyer side...');
+    console.log('Current user:', user?.id, user?.name);
+    console.log('🔑 Token available:', !!token);
+
+    // Direct client ID (abc)
+    console.log('📤 Setting selectedClient with id: 9, name: abc');
+    setSelectedClient({
+      id: 9,
+      name: "abc"
+    });
+    setShowChat(true);
+  };
 
   if (!user?.is_verified) {
     return (
@@ -173,29 +188,40 @@ export default function LawyerDashboard() {
               Manage your services and client bookings
             </p>
           </div>
-          <button
-            onClick={() => {
-              setTab('services');
-              setCreating(true);
-            }}
-            className='flex items-center gap-2 bg-white font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-blue-50 transition-colors'
-            style={{ color: '#0C447C' }}
-          >
-            <svg
-              className='w-3.5 h-3.5'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
+          <div className='flex gap-2'>
+            <button
+              onClick={openChatWithClient}
+              className='flex items-center gap-2 bg-white/20 backdrop-blur-sm font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-white/30 transition-colors text-white'
             >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 4v16m8-8H4'
-              />
-            </svg>
-            Add service
-          </button>
+              <svg className='w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' />
+              </svg>
+              Chat
+            </button>
+            <button
+              onClick={() => {
+                setTab('services');
+                setCreating(true);
+              }}
+              className='flex items-center gap-2 bg-white font-medium text-[13px] px-4 py-2.5 rounded-lg flex-shrink-0 hover:bg-blue-50 transition-colors'
+              style={{ color: '#0C447C' }}
+            >
+              <svg
+                className='w-3.5 h-3.5'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M12 4v16m8-8H4'
+                />
+              </svg>
+              Add service
+            </button>
+          </div>
         </div>
       </div>
 
@@ -342,7 +368,7 @@ export default function LawyerDashboard() {
                         </div>
                         <div className='min-w-0'>
                           <p className='text-[13px] font-medium text-slate-900'>
-                            {b.client_name}
+                            {b.client_name || b.client?.name || 'Client'}
                           </p>
                           <p className='text-[12px] text-slate-500 mt-0.5'>
                             {b.title} ·{' '}
@@ -652,6 +678,19 @@ export default function LawyerDashboard() {
           </>
         )}
       </div>
+
+      {/* Chat Window - Passing token explicitly */}
+      {showChat && selectedClient && (
+        <ChatWindow
+          otherUserId={selectedClient.id}
+          otherUserName={selectedClient.name}
+          onClose={() => {
+            setShowChat(false);
+            setSelectedClient(null);
+          }}
+          token={token} // ✅ Explicitly token pass kar rahe hain
+        />
+      )}
     </div>
   );
 }

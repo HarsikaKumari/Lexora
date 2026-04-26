@@ -77,6 +77,8 @@ model User {
   services          Service[]
   bookings          Booking[]
   documents         Document[]
+  messages_from     ChatMessage[] @relation("FromMessages")
+  messages_to       ChatMessage[] @relation("ToMessages")
 
   @@map("users")
 }
@@ -123,6 +125,7 @@ model Booking {
   client       User          @relation(fields: [client_id], references: [id], onDelete: Cascade)
   service      Service       @relation(fields: [service_id], references: [id], onDelete: Cascade)
   documents    Document[]    // ✅ Added reverse relation for Document
+  chat_messages ChatMessage[] // ✅ Added chat messages relation
 
   @@unique([client_id, service_id, booking_date])
   @@index([client_id])
@@ -152,4 +155,26 @@ model Document {
   @@index([booking_id])
   @@index([document_type])
   @@map("documents")
+}
+
+// ✅ NEW: Chat Message Model
+model ChatMessage {
+  id           Int       @id @default(autoincrement())
+  from_user_id Int
+  to_user_id   Int
+  booking_id   Int?
+  message      String    @db.Text
+  is_read      Boolean   @default(false)
+  created_at   DateTime  @default(now())
+  
+  // Relations
+  from_user    User      @relation("FromMessages", fields: [from_user_id], references: [id], onDelete: Cascade)
+  to_user      User      @relation("ToMessages", fields: [to_user_id], references: [id], onDelete: Cascade)
+  booking      Booking?  @relation(fields: [booking_id], references: [id], onDelete: SetNull)
+
+  @@index([from_user_id])
+  @@index([to_user_id])
+  @@index([booking_id])
+  @@index([created_at])
+  @@map("chat_messages")
 }

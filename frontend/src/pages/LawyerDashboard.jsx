@@ -69,7 +69,8 @@ export default function LawyerDashboard() {
     api.get('/bookings/my').then((res) => setBookings(res.data));
     api
       .get('/services')
-      .then((res) => setServices(res.data.services.filter((s) => s.lawyer_id === user?.id))
+      .then((res) =>
+        setServices(res.data.services.filter((s) => s.lawyer_id === user?.id)),
       );
   }, [user]);
 
@@ -288,10 +289,11 @@ export default function LawyerDashboard() {
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
-              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${tab === t.key
-                ? 'border-blue-700 text-blue-700'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
-                }`}
+              className={`text-[13px] font-medium px-4 py-2.5 border-b-2 -mb-px transition-colors ${
+                tab === t.key
+                  ? 'border-blue-700 text-blue-700'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
             >
               {t.label}
             </button>
@@ -342,7 +344,7 @@ export default function LawyerDashboard() {
                         </div>
                         <div className='min-w-0'>
                           <p className='text-[13px] font-medium text-slate-900'>
-                            {b.client_name}
+                            {b.client.name}
                           </p>
                           <p className='text-[12px] text-slate-500 mt-0.5'>
                             {b.title} ·{' '}
@@ -410,10 +412,10 @@ export default function LawyerDashboard() {
                 style={
                   creating
                     ? {
-                      background: 'transparent',
-                      color: '#185FA5',
-                      border: '0.5px solid #B5D4F4',
-                    }
+                        background: 'transparent',
+                        color: '#185FA5',
+                        border: '0.5px solid #B5D4F4',
+                      }
                     : { background: '#185FA5', color: '#fff', border: 'none' }
                 }
               >
@@ -603,11 +605,12 @@ export default function LawyerDashboard() {
                 services.map((s) => (
                   <div
                     key={s.id}
-                    className='bg-white border border-slate-200 rounded-xl px-5 py-4 flex items-center gap-4 hover:border-blue-200 transition-colors'
+                    className='bg-white border border-slate-200 rounded-xl px-5 py-4 flex items-center gap-4 hover:border-slate-300 hover:shadow-sm transition-all'
                   >
-                    <div className='w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0'>
+                    {/* Icon */}
+                    <div className='w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center flex-shrink-0'>
                       <svg
-                        className='w-4 h-4 text-blue-700'
+                        className='w-4 h-4 text-white'
                         fill='none'
                         stroke='currentColor'
                         viewBox='0 0 24 24'
@@ -620,13 +623,16 @@ export default function LawyerDashboard() {
                         />
                       </svg>
                     </div>
+
+                    {/* Content */}
                     <div className='flex-1 min-w-0'>
-                      <p className='text-[13px] font-medium text-slate-900'>
+                      <p className='text-[13px] font-semibold text-slate-900'>
                         {s.title}
                       </p>
-                      <div className='flex items-center gap-1.5 mt-1'>
+
+                      <div className='flex items-center gap-1.5 mt-1.5'>
                         {s.legal_issue && (
-                          <span className='text-[11px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium'>
+                          <span className='text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-medium'>
                             {s.legal_issue.replace(/_/g, ' ')}
                           </span>
                         )}

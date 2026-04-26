@@ -244,52 +244,62 @@ export default function ClientDashboard() {
                 console.log(b);
                 const st = statusStyle[b.status] || statusStyle.pending;
                 return (
-                <div className='flex flex-col'>
-                  <div
-                    key={b.id}
-                    className='bg-white border border-slate-200 rounded-xl px-5 py-4   items-center gap-4 hover:border-blue-200 transition-colors'
-                  >
-                    <div className='flex'>
-
+                  <div className='flex flex-col'>
                     <div
-                      className={`w-9 h-9 rounded-lg ${st.bg} flex items-center justify-center flex-shrink-0`}
+                      key={b.id}
+                      className='bg-white border border-slate-200 rounded-xl px-5 py-4 hover:border-blue-200 transition-colors'
                     >
-                      <div className={`w-2 h-2 rounded-full ${st.dot}`} />
-                    </div>
-                    <span className='text-black text-lg font-bold capatalize'>
-                      {b.service.lawyer.name.toUpperCase()}{' '}
-                    </span>
-                    <span className='text-black text-lg font-bold '>
-                    </span>
-                    <div className='flex-1 min-w-0'>
-                      <p className='text-[13px] font-medium text-slate-900 truncate'>
-                        {b.title}
-                      </p>
-                      <p className='text-[12px] text-slate-500 mt-0.5'>
-                        {new Date(b.booking_date).toLocaleDateString('en-IN', {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        })}{' '}
-                        at {b.booking_time?.slice(0, 5)}
-                      </p>
-                    </div>
-                    <span
-                      className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${st.bg} ${st.text} whitespace-nowrap`}
-                    >
-                      {st.label}
-                    </span>
-                    
-                    </div>
-                        <div className='flex items-start px-5 py-3 mt-3 bg-slate-50 rounded-lg text-gray-600 text-[1.2rem]'>
-                        <p className='text-[13px] font-medium text-slate-900 mt-3'>
-                        {b.service.description}
-                      </p>
+                      {/* 🔹 Top Row */}
+                      <div className='flex items-start justify-between gap-3'>
+                        {/* Left Section */}
+                        <div className='flex items-start gap-3 flex-1 min-w-0'>
+                          {/* Status Icon */}
+                          <div
+                            className={`w-9 h-9 rounded-lg ${st.bg} flex items-center justify-center flex-shrink-0`}
+                          >
+                            <div className={`w-2 h-2 rounded-full ${st.dot}`} />
+                          </div>
+
+                          {/* Content */}
+                          <div className='min-w-0'>
+                            <p className='text-[14px] font-semibold text-slate-900 capitalize'>
+                              {b.service.lawyer.name}
+                            </p>
+
+                            <p className='text-[12px] text-slate-500'>
+                              {b.title}
+                            </p>
+
+                            <p className='text-[11px] text-slate-400 mt-0.5'>
+                              {new Date(b.booking_date).toLocaleDateString(
+                                'en-IN',
+                                {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric',
+                                },
+                              )}{' '}
+                              • {b.booking_time?.slice(0, 5)}
+                            </p>
+                          </div>
                         </div>
 
+                        {/* Status Badge */}
+                        <span
+                          className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${st.bg} ${st.text} whitespace-nowrap`}
+                        >
+                          {st.label}
+                        </span>
+                      </div>
+
+                      {/* 🔹 Description */}
+                      <div className='mt-4 bg-slate-50 rounded-lg px-4 py-3'>
+                        <p className='text-[13px] text-slate-600 leading-relaxed'>
+                          {b.service.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                              
-                </div>
                 );
               })
             )}

@@ -39,11 +39,13 @@ const ChatWindow = ({ otherUserId, otherUserName, onClose, token: propToken }) =
         fetchMessages();
 
         // Socket connection
-        console.log('🔌 Connecting socket...');
-        socketRef.current = io(`${import.meta.env.VITE_API_URL}` || 'http://localhost:5000', {
-            auth: { token },
-            transports: ['websocket', 'polling'],
-        });
+        socketRef.current = io(
+            import.meta.env.VITE_API_URL || 'http://localhost:5000',
+            {
+                auth: { token },
+                transports: ['websocket', 'polling'],
+            }
+        );
 
         socketRef.current.on('connect', () => {
             console.log('✅ Socket connected!');

@@ -200,6 +200,14 @@ cd backend
 npm install
 ```
 
+Create a `.env` file in the `backend/` folder:
+
+```env
+PORT=5000
+DATABASE_URL=your_neon_postgresql_connection_string
+JWT_SECRET=your_super_secret_jwt_key
+```
+
 Start the backend server:
 
 ```bash
@@ -219,6 +227,12 @@ cd ../frontend
 npm install
 ```
 
+Create a `.env` file in the `frontend/` folder:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
 Start the development server:
 
 ```bash
@@ -228,6 +242,99 @@ npm run dev
 > Frontend will run at `http://localhost:5173`
 
 ---
+
+## 🗄️ Database Schema
+
+```sql
+-- Users Table
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role VARCHAR(20) CHECK (role IN ('client', 'lawyer', 'admin')) DEFAULT 'client',
+  unique_identifier VARCHAR(100),
+  is_verified BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Services Table
+CREATE TABLE services (
+  id SERIAL PRIMARY KEY,
+  lawyer_id INT REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(200) NOT NULL,
+  description TEXT,
+  legal_issue_type VARCHAR(100),
+  document_type VARCHAR(100),
+  region VARCHAR(100),
+  price DECIMAL(10,2),
+  availability TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Bookings Table
+CREATE TABLE bookings (
+  id SERIAL PRIMARY KEY,
+  client_id INT REFERENCES users(id) ON DELETE CASCADE,
+  service_id INT REFERENCES services(id) ON DELETE CASCADE,
+  status VARCHAR(30) DEFAULT 'pending',
+  booking_date TIMESTAMP,
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Documents Table
+CREATE TABLE documents (
+  id SERIAL PRIMARY KEY,
+  client_id INT REFERENCES users(id) ON DELETE CASCADE,
+  document_type VARCHAR(100),
+  content TEXT,
+  generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+---
+
+## 📡 API Endpoints
+
+### Auth Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register a new user |
+| POST | `/api/auth/login` | Login and receive JWT token |
+| GET | `/api/auth/me` | Get logged-in user profile |
+
+### Service Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/services` | Get all services (with filters) |
+| POST | `/api/services` | Create a new service (Lawyer only) |
+| PUT | `/api/services/:id` | Update a service |
+| DELETE | `/api/services/:id` | Delete a service |
+
+### Booking Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/bookings` | Book a consultation |
+| GET | `/api/bookings/client` | Get client's bookings |
+| GET | `/api/bookings/lawyer` | Get lawyer's bookings |
+| PATCH | `/api/bookings/:id/status` | Update booking status |
+
+### Admin Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/admin/users` | Get all users |
+| PATCH | `/api/admin/verify/:id` | Verify a user |
+| DELETE | `/api/admin/users/:id` | Remove a user |
+
+### Document Routes
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/documents/generate` | Generate a legal document |
+| GET | `/api/documents` | Get client's documents |
+
+---
+
 ## 👥 User Roles
 
 | Role | Capabilities |
@@ -235,6 +342,25 @@ npm run dev
 | **Client** | Register, search services, book consultations, request documents |
 | **Lawyer** | Create services, set pricing & availability, manage bookings |
 | **Admin** | Verify users, manage platform, view all activity |
+
+---
+
+## 🔒 Environment Variables
+
+### Backend `.env`
+```env
+PORT=5000
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+JWT_SECRET=your_jwt_secret_key
+NODE_ENV=development
+```
+
+### Frontend `.env`
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+> ⚠️ **Never commit your `.env` files to GitHub.** Make sure they are listed in `.gitignore`.
 
 ---
 

@@ -200,14 +200,6 @@ cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend/` folder:
-
-```env
-PORT=5000
-DATABASE_URL=your_neon_postgresql_connection_string
-JWT_SECRET=your_super_secret_jwt_key
-```
-
 Start the backend server:
 
 ```bash

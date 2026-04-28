@@ -121,8 +121,8 @@ export default function Login() {
           "kumari"
         </p>
         <p className='text-slate-600 text-xs'>
-          © 2025 LegalConnect Technologies Pvt. Ltd.
-        </p>
+          © 2025 All rights reserved<br />
+                        Contact us: 924837492        </p>
       </div>
 
       {/* ── RIGHT — Form ── */}

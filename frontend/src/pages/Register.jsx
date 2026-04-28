@@ -150,8 +150,8 @@ export default function Register() {
         </div>
 
         <p className='text-slate-600 text-xs'>
-          © 2025 LegalConnect Technologies Pvt. Ltd.
-        </p>
+          © 2025 All rights reserved<br />
+                        Contact us: 924837492        </p>
       </div>
 
       {/* ── RIGHT — Form ── */}
@@ -177,11 +177,10 @@ export default function Register() {
                 key={opt.value}
                 type='button'
                 onClick={() => setForm({ ...form, role: opt.value })}
-                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${
-                  form.role === opt.value
+                className={`flex-1 py-2 rounded-md text-sm font-medium transition-colors duration-150 ${form.role === opt.value
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-500 hover:text-slate-700'
-                }`}
+                  }`}
               >
                 {opt.label}
               </button>

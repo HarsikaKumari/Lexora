@@ -11,6 +11,7 @@ import DocumentsPage from './pages/DocumentsPage';
 import DocumentGenerator from './pages/DocumentGenerator';
 import DocumentViewer from './pages/DocumentViewer';
 import BookingPage from './pages/BookingPage';
+import Home from './pages/HomePage';
 
 const PrivateRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -42,7 +43,7 @@ export default function App() {
           <Routes>
             <Route
               path='/'
-              element={<DashboardRedirect />}
+              element={<Home />}
             />
 
             <Route

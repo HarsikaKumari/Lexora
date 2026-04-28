@@ -238,25 +238,6 @@ npm run dev
 
 ---
 
-## 🔒 Environment Variables
-
-### Backend `.env`
-```env
-PORT=5000
-DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
-JWT_SECRET=your_jwt_secret_key
-NODE_ENV=development
-```
-
-### Frontend `.env`
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-> ⚠️ **Never commit your `.env` files to GitHub.** Make sure they are listed in `.gitignore`.
-
----
-
 ## ☁️ Deployment
 
 ### Frontend — Vercel
